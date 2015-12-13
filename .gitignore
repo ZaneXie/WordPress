@@ -1,0 +1,4 @@
+!.gitignore
+.idea
+wp-config.php
+vendor

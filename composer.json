@@ -1,0 +1,33 @@
+{
+  "name": "ZaneXie/WordPress",
+  "description": "The ZaneXie's Fork of WordPress, with composer support.",
+  "keywords": [
+    "wordpress"
+  ],
+  "license": "GPL",
+  "type": "project",
+  "require": {
+    "php": ">=5.5.9"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "*"
+  },
+  "autoload": {
+    "psr-4": {
+    }
+  },
+  "autoload-dev": {
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "http://packagist.cn"
+    },
+    {
+      "packagist": false
+    }
+  ]
+}

@@ -369,3 +369,6 @@ if ( ! empty( $_REQUEST['action'] ) ) {
 	 */
 	do_action( 'admin_action_' . $_REQUEST['action'] );
 }
+
+require_once(dirname(dirname(__FILE__)).'/vendor/autoload.php');
+
