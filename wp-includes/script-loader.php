@@ -968,11 +968,21 @@ function _print_scripts() {
 			echo "</script>\n";
 		}
 
+		$js = "";
 		foreach ( array_unique( explode( ',', $concat ) ) as $load ) {
 			$script = $wp_scripts->registered[ $load ];
-			$path   = $script->src;
-			echo "<script type='text/javascript' src='" . $path . "'></script>\n";
+			$path   = ABSPATH . $script->src;
+			$js .= file_get_contents($path).";";
+//			echo "<script type='text/javascript' src='" . $path . "'></script>\n";
 		}
+		$path      = '/wp-content/cache/' . md5( $js ) . '.js';
+		$file_path = ABSPATH . $path;
+		if ( ! file_exists( $file_path ) ) {
+			$file = fopen( $file_path, 'w' );
+			fwrite( $file, JSMin::minify( $js ) );
+			fclose( $file );
+		}
+		echo "<script type='text/javascript' src='" . $path . "'></script>\n";
 		$concat = str_split( $concat, 128 );
 		$concat = 'load%5B%5D=' . implode( '&load%5B%5D=', $concat );
 
@@ -1139,13 +1149,24 @@ function _print_styles() {
 		$dir = $wp_styles->text_direction;
 		$ver = $wp_styles->default_version;
 		$href = $wp_styles->base_url . "/wp-admin/load-styles.php?c={$zip}&dir={$dir}&load=" . trim($wp_styles->concat, ', ') . '&ver=' . $ver;
+
+		$css = "";
 		foreach ( array_unique( explode( ',', trim( $wp_styles->concat, ', ' ) ) ) as $load ) {
 			if ( ! array_key_exists( $load, $wp_styles->registered ) ) {
 				continue;
 			}
 			$style = $wp_styles->registered[ $load ];
-			echo "<link rel='stylesheet' href='" . $style->src . "' type='text/css' media='all' />\n";
+			$css .= file_get_contents(ABSPATH. $style->src).'\n';
+//			echo "<link rel='stylesheet' href='" . $style->src . "' type='text/css' media='all' />\n";
 		}
+		$path      = '/wp-content/cache/' . md5( $css ) . '.css';
+		$file_path = ABSPATH . $path;
+		if ( ! file_exists( $file_path ) ) {
+			$file = fopen( $file_path, 'w' );
+			fwrite( $file, CssMin::minify( $css ) );
+			fclose( $file );
+		}
+		echo "<link rel='stylesheet' href='" . $path . "' type='text/css' media='all' />\n";
 //		echo "<link rel='stylesheet' href='" . esc_attr($href) . "' type='text/css' media='all' />\n";
 
 		if ( !empty($wp_styles->print_code) ) {
